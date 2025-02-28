@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: seagreen;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background:red;
+            color:yellow;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+        }
+        .container {
+            width: 50%;
+            margin: auto;
+            padding: 20px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .event-list, .place-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .event, .place {
+            background: rgb(62, 113, 144);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            flex: 1 1 calc(33.333% - 20px);
+            text-align: center;
+        }
+        .event img, .place img {
+            width: 50%;
+            border-radius: 10px;
+        }
+        input, select, button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Event Booking</div>
+    <div class="container">
+        <div class="buttons">
+            <button onclick="alert('Displaying Places by State')">Places</button>
+            <input type="text" id="search" placeholder="Search places...">
+        </div>
+        
+        <h2>Available venues</h2>
+        <div class="place-list">
+            <div class="place">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYuA3QkhXMZN8KNqrL4tchTlXkLQkGu5DTMw&s" alt="Place 1">
+                <h3>City Hall</h3>
+            </div>
+            <div class="place">
+                <img src="https://content.jdmagicbox.com/v2/comp/hyderabad/x7/040pxx40.xx40.230522185731.d9x7/catalogue/empire-convention-hall-asif-nagar-hyderabad-banquet-halls-92aXcOvWc0.jpg" alt="Place 2">
+                <h3>Convention Center</h3>
+            </div>
+            <div class="place">
+                <img src="https://images.pexels.com/photos/14373427/pexels-photo-14373427.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Place 3">
+                <h3>Auditorium</h3>
+            </div>
+        </div>
+
+        <h2>Upcoming Events</h2>
+        <div class="event-list">
+            <div class="event">
+                <img src="https://media.istockphoto.com/id/1330424071/photo/large-group-of-people-at-a-concert-party.jpg?s=612x612&w=0&k=20&c=LwdiOCBqbfICjQ3j5AzwyugxmfkbyfL3StKEQhtx4hE=" alt="Event 1">
+                <h3>Music Concert</h3>
+            </div>
+            <div class="event">
+                <img src="https://www.chocolaty.in/blog/wp-content/uploads/2023/02/9-ways-to-celebrate-Holi-if-you-are-staying-away-from-home.jpg" alt="Event 2">
+                <h3>holi</h3>
+            </div>
+            <div class="event">
+                <img src="https://cdn-klbmd.nitrocdn.com/oflAEolSqrPhKMSrYpDBcfHfpcFckcly/assets/images/optimized/rev-1bcb9bb/www.dbsindia.com/images/conference-room/conferenceroomsinhyderabad.webp" alt="Event 3">
+                <h3>Business Conference</h3>
+            </div>
+        </div>
+
+        <h2>Book an Event</h2>
+        <form id="bookingForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
+                
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+
+            <label for="event">Select Event:</label>
+            <select id="event" required>
+<option value="concert">Concert</option>
+                <option value="workshop">Workshop</option>
+                <option value="conference">Conference</option>
+            </select>
+
+            <button type="submit">book now</button>
+        </form>
+        <p id="confirmation" style="display:none; color: green;"></p>
+    </div>
+    
+    <script>
+        document.getElementById("bookingForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const name = document.getElementById("name").value;
+            const selectedEvent = document.getElementById("event").value;
+            document.getElementById("confirmation").innerText = `Thank you, ${name}. Your booking for ${selectedEvent} is confirmed!`;
+            document.getElementById("confirmation").style.display = "block";
+            this.reset();
+        });
+    </script>
+</body>
+</html>

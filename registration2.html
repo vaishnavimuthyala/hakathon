@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Booking</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .header {
+            background: linear-gradient(to right, #4e79a7, #9bbee2);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .container {
+            width: 50%;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #4e79a7;
+        }
+        label {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 5px;
+            display: block;
+        }
+        input, select, button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 12px;
+            font-size: 14px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            transition: 0.3s ease-in-out;
+        }
+        input:focus, select:focus, button:focus {
+            outline: none;
+            border-color: #4e79a7;
+        }
+        button {
+            background-color: #4e79a7;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3b6d8c;
+        }
+        .camera-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        #camera {
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            box-shadow: 0 0 8px rgba(0,0,0,0.2);
+        }
+        .qr-output {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .qr-output canvas {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Event Booking</div>
+    <div class="container">
+        <h2>Event Registration:</h2>
+        <form id="registrationForm" onsubmit="event.preventDefault(); registerParticipant();">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+            
+            <label for="email">Email ID:</label>
+            <input type="email" id="email" name="email" required><br>
+            
+            <label for="payment">Payment ID:</label>
+            <input type="text" id="payment" name="payment" required><br>
+            
+            <label for="face">Face Capture:</label>
+            <div class="camera-container">
+                <video id="camera" width="300" height="200" autoplay></video>
+                <button type="button" onclick="captureFace()">Capture Face</button>
+            </div>
+            
+            <canvas id="faceCanvas" style="display:none;"></canvas><br>
+            
+            <button type="submit">Book</button>
+        </form>
+        
+        <div class="qr-output" id="qrOutput">
+            <canvas id="qrcode"></canvas>
+            <p>Scan this QR Code for your booking details.</p>
+        </div>
+        
+        <div class="form-footer">
+            <p>&copy; 2025 Event Booking. All rights reserved.</p>
+        </div>
+    </div>
+    
+    <script>
+        function redirectToNewPage() {
+            let selectedPlace = document.getElementById("search").value;
+            if (selectedPlace) {
+                window.location.href = "event_categories.html?place=" + selectedPlace;
+            }
+        }
+        
+        function captureFace() {
+            let video = document.getElementById("camera");
+            let canvas = document.getElementById("faceCanvas");
+            let context = canvas.getContext("2d");
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            alert("Face captured successfully!");
+        }
+        
+        function registerParticipant() {
+            let name = document.getElementById("name").value;
+            let email = document.getElementById("email").value;
+            let payment = document.getElementById("payment").value;
+            let canvas = document.getElementById("faceCanvas");
+            let faceData = canvas.toDataURL("image/png");
+            
+            fetch("http://localhost:3000/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, payment, faceData })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+        
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                document.getElementById("camera").srcObject = stream;
+            })
+            .catch(error => {
+                console.error("Error accessing webcam: ", error);
+            });
+    </script>
+</body>
+</html>
